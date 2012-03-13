@@ -45,7 +45,7 @@ for iter = 1:NUM_TIMESTEPS
 	
 	filename = [SIMULATION_DIRECTORY '/iter' num2str(iter) '.xml'];
 
-	initialize(filename, y,z,l_pos,r_pos,xplane,SPINDLE_RADIUS);
+	initialize_cylinder(filename, y,z,l_pos,r_pos,xplane,SPINDLE_RADIUS);
 end
 
 
