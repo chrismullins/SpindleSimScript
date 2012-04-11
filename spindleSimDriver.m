@@ -1,6 +1,19 @@
-
-KMT_LENGTH_FILE = 'RunA _threshold_925microns.csv'; %keep in mind I deleted the top line of strings
-SPINDLE_LENGTH_FILE = 'RunA _threshold_925microns_Lip.csv';
+function u = spindleSimDriver(varargin)
+nArgs = numel(varargin);
+if nArgs == 6
+visParams = varargin;
+showDisks = varargin{1};
+showCylinders = varargin{2};
+showSpheres = varargin{3};
+diskFC = varargin{4};
+cylinderFC = varargin{5};
+sphereFC = varargin{6};	
+end
+%function = spindleSimDriver(showDisks,showCylinders,showSpheres,diskFC,cylinderFC,sphereFC)
+%KMT_LENGTH_FILE = 'Boundsfix T 1 C1.csv'; %keep in mind I deleted the top line of strings
+%SPINDLE_LENGTH_FILE = 'Boundsfix T 1 C1_Lip.csv';
+[KMT_LENGTH_FILE KLFPATH] = uigetfile('*.csv','Select the kMT Length File:');
+[SPINDLE_LENGTH_FILE SLFPATH] = uigetfile('*.csv','Select the Spindle Length File');
 NUM_TIMESTEPS = 100;
 NUM_KMTS = 16; %per side
 SIMULATION_DIRECTORY = 'SimDir';
@@ -45,7 +58,7 @@ for iter = 1:NUM_TIMESTEPS
 	
 	filename = [SIMULATION_DIRECTORY '/iter' num2str(iter) '.xml'];
 
-	initialize_cylinder(filename, y,z,l_pos,r_pos,xplane,SPINDLE_RADIUS);
+	initialize_cylinder(filename, y,z,l_pos,r_pos,xplane,SPINDLE_RADIUS,visParams);
 end
 
 

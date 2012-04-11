@@ -10,14 +10,22 @@
 %% radius:     this refers to the radius of the spindle, around which the
 %%             kMTs are placed
 %
-function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius)
+function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius,visParams)
+
+SHOW_DISKS = visParams{1};
+SHOW_CYLINDERS = visParams{2};
+SHOW_SPHERES = visParams{3};
+DISK_CHANNEL = visParams{4};
+CYLINDER_CHANNEL = visParams{5};
+SPHERE_CHANNEL = visParams{6};
 
 leftTubelengths = lkMTpos - xplanes(1);
 rightTubelengths = -rkMTpos + xplanes(2);
 
 docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
-fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
+%fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
+fn = ['C:/user/chris/Desktop/Andrew/' filename];
 SimulatedExperiments.setAttribute('file',fn);
 SimulatedExperiments.setAttribute('modified',datestr(now));
 SimulatedExperiments.setAttribute('created',datestr(now));
@@ -45,8 +53,8 @@ FSim.setAttribute('useCustomFocalPlanePositions','false');
 FSim.setAttribute('gain','1');
 FSim.setAttribute('offset','0.000000');
 FSim.setAttribute('pixelSize','65.000000');
-%FSim.setAttribute('psfName','C:/users/chris/Desktop/NSRG/Spindle/script/rescaled_bloom_psf.tif'); %%%%% FIX THIS TO TAKE THE RIGHT PSF %%%%
-FSim.setAttribute('psfName','None');
+FSim.setAttribute('psfName','C:/Users/nanowork/Desktop/Chris/16-Bit Copy of Compiled Expreimental PSF RESCALED.tif'); %%%%% FIX THIS TO TAKE THE RIGHT PSF %%%%
+%FSim.setAttribute('psfName','None');
 FSim.setAttribute('imageWidth','200');
 FSim.setAttribute('imageHeight','200');
 FSim.setAttribute('shearInX','0.000000');
@@ -59,7 +67,8 @@ FSim.setAttribute('refGridSpacing','50.000000');
 FSim.setAttribute('superimposeSimulatedImage','false');
 FSim.setAttribute('superimposeComparisonImage','false');
 FSim.setAttribute('minimumIntensityLevel','0.000000');
-FSim.setAttribute('maximumIntensityLevel','4095.000000');
+FSim.setAttribute('maximumIntensityLevel','200.000000'); %%changed to 200, gain should scale
+%FSim.setAttribute('maximumIntensityLevel','0.00463436311110854'); %it didn't scale, lets see if this works
 SimulatedExperiments.appendChild(FSim);
 
 FocalPlanes = docNode.createElement('FocalPlanes');
@@ -121,7 +130,8 @@ LName.setAttribute('value','LDisk');
 
 lvis = docNode.createElement('Visible');
 LPlane.appendChild(lvis);
-lvis.setAttribute('value','true');
+%lvis.setAttribute('value','true');
+lvis.setAttribute('value',SHOW_DISKS);
 
 lposx = docNode.createElement('PositionX');
 LPlane.appendChild(lposx);
@@ -166,7 +176,8 @@ lRadius.setAttribute('optimize','false');
 lsfm = docNode.createElement('SurfaceFluorophoreModel');
 LPlane.appendChild(lsfm);
 lsfm.setAttribute('enabled','true');
-lsfm.setAttribute('channel','all');
+%lsfm.setAttribute('channel','all');
+lsfm.setAttribute('channel',DISK_CHANNEL);
 lsfm.setAttribute('density','100.000000');
 lsfm.setAttribute('numberOfFluorophores','0');
 lsfm.setAttribute('samplingMode','fixedDensity');
@@ -187,8 +198,8 @@ RName.setAttribute('value','RDisk');
 
 rvis = docNode.createElement('Visible');
 RPlane.appendChild(rvis);
-rvis.setAttribute('value','true');
-
+%rvis.setAttribute('value','true');
+rvis.setAttribute('value',SHOW_DISKS);
 rposx = docNode.createElement('PositionX');
 RPlane.appendChild(rposx);
 rposx.setAttribute('value',num2str(xplanes(2)));
@@ -232,7 +243,8 @@ rRadius.setAttribute('optimize','false');
 rsfm = docNode.createElement('SurfaceFluorophoreModel');
 RPlane.appendChild(rsfm);
 rsfm.setAttribute('enabled','true');
-rsfm.setAttribute('channel','all');
+%rsfm.setAttribute('channel','all');
+rsfm.setAttribute('channel',DISK_CHANNEL);
 rsfm.setAttribute('density','100.000000');
 rsfm.setAttribute('numberOfFluorophores','0');
 rsfm.setAttribute('samplingMode','fixedDensity');
@@ -254,7 +266,8 @@ for i = 1:(numel(lkMTpos))
 	
 	lvis = docNode.createElement('Visible');
 	lkMT.appendChild(lvis);
-	lvis.setAttribute('value','true');
+	%lvis.setAttribute('value','true');
+	lvis.setAttribute('value',SHOW_SPHERES);
 	
 	lscan = docNode.createElement('Scannable');
 	lkMT.appendChild(lscan);
@@ -279,6 +292,14 @@ for i = 1:(numel(lkMTpos))
 	lkMT.appendChild(lradius);
 	lradius.setAttribute('value','10.000000');
 	lradius.setAttribute('optimize','false');
+
+	lsfm = docNode.createElement('SurfaceFluorophoreModel');
+	lkMT.appendChild(lsfm);
+	lsfm.setAttribute('channel',SPHERE_CHANNEL);
+
+	lvfm = docNode.createElement('VolumeFluororphoreModel');
+	lkMT.appendChild(lvfm);
+	lvfm.setAttribute('channel',SPHERE_CHANNEL);
 end
 
 
@@ -291,7 +312,8 @@ for i = 1:(numel(rkMTpos))
 	
 	rvis = docNode.createElement('Visible');
 	rkMT.appendChild(rvis);
-	rvis.setAttribute('value','true');
+	%rvis.setAttribute('value','true');
+	rvis.setAttribute('value',SHOW_SPHERES);
 	
 	rscan = docNode.createElement('Scannable');
 	rkMT.appendChild(rscan);
@@ -316,6 +338,14 @@ for i = 1:(numel(rkMTpos))
 	rkMT.appendChild(rradius);
 	rradius.setAttribute('value','10.000000');
 	rradius.setAttribute('optimize','false');
+
+	rsfm = docNode.createElement('SurfaceFluorophoreModel');
+	rkMT.appendChild(rsfm);
+	rsfm.setAttribute('channel',SPHERE_CHANNEL);
+
+	rvfm = docNode.createElement('VolumeFluorophoreModel');
+	rkMT.appendChild(rvfm);
+	rvfm.setAttribute('channel',SPHERE_CHANNEL);
 end
 
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -330,7 +360,8 @@ for i = 1:(numel(rkMTpos))
 
 	rtubeVis = docNode.createElement('Visible');
 	rtube.appendChild(rtubeVis);
-	rtubeVis.setAttribute('value','true');
+	%rtubeVis.setAttribute('value','true');
+	rtubeVis.setAttribute('value',SHOW_CYLINDERS);
 
 	rtubePosX = docNode.createElement('PositionX');
 	rtube.appendChild(rtubePosX);
@@ -382,7 +413,8 @@ for i = 1:(numel(rkMTpos))
 	rtubeSFM = docNode.createElement('SurfaceFluorophoreModel');
 	rtube.appendChild(rtubeSFM);
 	rtubeSFM.setAttribute('enabled','true');
-	rtubeSFM.setAttribute('channel','all');
+	%rtubeSFM.setAttribute('channel','all');
+	rtubeSFM.setAttribute('channel',CYLINDER_CHANNEL);
 	rtubeSFM.setAttribute('density','100.000000');
 	rtubeSFM.setAttribute('numberOfFluorophores','0');
 	rtubeSFM.setAttribute('samplingMode','fixedDensity');
@@ -394,7 +426,8 @@ for i = 1:(numel(rkMTpos))
 	rtubeVFM = docNode.createElement('VolumeFluorophoreMode');
 	rtube.appendChild(rtubeVFM);
 	rtubeVFM.setAttribute('enabled','true');
-	rtubeVFM.setAttribute('channel','all');
+	%rtubeVFM.setAttribute('channel','all');
+	rtubeVFM.setAttribute('channel',CYLINDER_CHANNEL);
 	rtubeVFM.setAttribute('density','100.000000');
 	rtubeVFM.setAttribute('numberOfFluorophores','0');
 	rtubeVFM.setAttribute('samplingMode','fixedDensity');
@@ -417,7 +450,8 @@ for i = 1:(numel(lkMTpos))
 
 	ltubeVis = docNode.createElement('Visible');
 	ltube.appendChild(ltubeVis);
-	ltubeVis.setAttribute('value','true');
+	%ltubeVis.setAttribute('value','true');
+	ltubeVis.setAttribute('value',SHOW_CYLINDERS);
 
 	ltubePosX = docNode.createElement('PositionX');
 	ltube.appendChild(ltubePosX);
@@ -468,7 +502,8 @@ for i = 1:(numel(lkMTpos))
 	ltubeSFM = docNode.createElement('SurfaceFluorophoreModel');
 	ltube.appendChild(ltubeSFM);
 	ltubeSFM.setAttribute('enabled','true');
-	ltubeSFM.setAttribute('channel','all');
+	%ltubeSFM.setAttribute('channel','all');
+	ltubeSFM.setAttribute('channel',CYLINDER_CHANNEL);
 	ltubeSFM.setAttribute('density','100.000000');
 	ltubeSFM.setAttribute('numberOfFluorophores','0');
 	ltubeSFM.setAttribute('samplingMode','fixedDensity');
@@ -480,7 +515,8 @@ for i = 1:(numel(lkMTpos))
 	ltubeVFM = docNode.createElement('VolumeFluorophoreMode');
 	ltube.appendChild(ltubeVFM);
 	ltubeVFM.setAttribute('enabled','true');
-	ltubeVFM.setAttribute('channel','all');
+	%ltubeVFM.setAttribute('channel','all');
+	ltubeVFM.setAttribute('channel',CYLINDER_CHANNEL);
 	ltubeVFM.setAttribute('density','100.000000');
 	ltubeVFM.setAttribute('numberOfFluorophores','0');
 	ltubeVFM.setAttribute('samplingMode','fixedDensity');
