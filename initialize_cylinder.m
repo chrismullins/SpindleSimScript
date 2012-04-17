@@ -296,10 +296,13 @@ for i = 1:(numel(lkMTpos))
 	lsfm = docNode.createElement('SurfaceFluorophoreModel');
 	lkMT.appendChild(lsfm);
 	lsfm.setAttribute('channel',SPHERE_CHANNEL);
+    %lsfm.setAttribute('numberOfFluorophores','1');
+	lsfm.setAttribute('density','900.00');
 
 	lvfm = docNode.createElement('VolumeFluororphoreModel');
 	lkMT.appendChild(lvfm);
 	lvfm.setAttribute('channel',SPHERE_CHANNEL);
+    lvfm.setAttribute('numberOfFluorophores','1');
 end
 
 
@@ -342,10 +345,13 @@ for i = 1:(numel(rkMTpos))
 	rsfm = docNode.createElement('SurfaceFluorophoreModel');
 	rkMT.appendChild(rsfm);
 	rsfm.setAttribute('channel',SPHERE_CHANNEL);
+   % rsfm.setAttribute('numberOfFluorophores','1');
+	rsfm.setAttribute('density','900.00');
 
 	rvfm = docNode.createElement('VolumeFluorophoreModel');
 	rkMT.appendChild(rvfm);
 	rvfm.setAttribute('channel',SPHERE_CHANNEL);
+    rvfm.setAttribute('numberOfFluorophores','1');
 end
 
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%5
