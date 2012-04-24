@@ -1,1 +1,11 @@
 This is a MATLAB script to take the output of a simulation from a csv file and create XML readable by the Microscope Simulator software.  
+
+To use on a new machine:
+	Edit initialize_cylinder.m and change fn to point to the directory you want to save the output XML files.  This folder must exist.
+
+To run:
+	cd {directory where the scripts are}
+	Run gui in the command window.
+	Set the elements you want generated and the channels to generate them iun and press 'Generate Simulation'.  In the dialog box, select the Kinetochore length file (T 09 05x B1.csv in Examples), and in the second dialog select the spindle length file  (T 09 05x B1_Lip.csv in Examples).
+
+

@@ -25,7 +25,9 @@ rightTubelengths = -rkMTpos + xplanes(2);
 docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
 %fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
-fn = ['C:/user/chris/Desktop/Andrew/' filename];
+%fn = ['C:/user/chris/Desktop/Andrew/' filename];
+fn = ['C:/Users/nanowork/Desktop/Deleteme' filename];
+
 SimulatedExperiments.setAttribute('file',fn);
 SimulatedExperiments.setAttribute('modified',datestr(now));
 SimulatedExperiments.setAttribute('created',datestr(now));

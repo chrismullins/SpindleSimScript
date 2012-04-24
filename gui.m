@@ -1,4 +1,4 @@
-function varargout = gui(varargin)
+function varargout = spindleGUI(varargin)
 showDisks = 0;
 showCylinders = 0;
 showSpheres = 0;
