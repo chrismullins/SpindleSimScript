@@ -6,6 +6,6 @@ To use on a new machine:
 To run:
 	cd {directory where the scripts are}
 	Run gui in the command window.
-	Set the elements you want generated and the channels to generate them iun and press 'Generate Simulation'.  In the dialog box, select the Kinetochore length file (T 09 05x B1.csv in Examples), and in the second dialog select the spindle length file  (T 09 05x B1_Lip.csv in Examples).
+	Set the elements you want generated and the channels to generate them iun and press 'Generate Simulation'.  In the dialog box, select the Kinetochore length file (Boundsfix T 085 C1.csv in Examples), and in the second dialog select the spindle length file  (T Boundsfix T 085_Lip.csv in Examples).
 
 
