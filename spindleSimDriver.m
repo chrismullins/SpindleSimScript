@@ -23,9 +23,9 @@ ORIGIN = [6500 6500 0];
 
 
 fprintf('Reading the CSV files...\n');
-simFile = csvread(KMT_LENGTH_FILE);
+simFile = csvread([KLFPATH KMT_LENGTH_FILE]);
 simFile = simFile * 10^9;
-lengthFile = csvread(SPINDLE_LENGTH_FILE,1,1); %figure out how to not delete the header lines
+lengthFile = csvread([SLFPATH SPINDLE_LENGTH_FILE],1,1); %figure out how to not delete the header lines
 lengthFile = lengthFile * 10^9;
 
 fprintf('Making the simulation directory...\n');
