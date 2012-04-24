@@ -50,7 +50,7 @@ for iter = 1:NUM_TIMESTEPS
 	l = simFile(iter+1,1:NUM_KMTS);
 	r = simFile(iter+1,NUM_KMTS+1:2*NUM_KMTS);
 
-	SPINDLE_LENGTH = lengthFile(iter+1,3);
+	SPINDLE_LENGTH = lengthFile(iter+1,1);
 	xplane = [ORIGIN(1)-(SPINDLE_LENGTH/2) ORIGIN(1)+(SPINDLE_LENGTH/2)];
 
 	l_pos = l + xplane(1);
