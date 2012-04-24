@@ -25,7 +25,9 @@ rightTubelengths = -rkMTpos + xplanes(2);
 docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
 %fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
-fn = ['C:/user/chris/Desktop/Andrew/' filename];
+%fn = ['C:/user/chris/Desktop/Andrew/' filename];
+fn = ['C:/Users/nanowork/Desktop/Deleteme' filename];
+
 SimulatedExperiments.setAttribute('file',fn);
 SimulatedExperiments.setAttribute('modified',datestr(now));
 SimulatedExperiments.setAttribute('created',datestr(now));
@@ -549,11 +551,11 @@ xmlwrite(filename,docNode);
 
 apos = '''';
 
-removeNewline = unix(['sed -i ' apos ':a;N;$!ba;s/\n//g' apos ' ' filename]);
+%removeNewline = unix(['sed -i ' apos ':a;N;$!ba;s/\n//g' apos ' ' filename]);
 
 %sed -i 's/>[ \t]*</></g' sedtest.xml 
 
-removeSpaces = unix(['sed -i ' apos 's/>[ \t]*</></g' apos ' ' filename]);
+%removeSpaces = unix(['sed -i ' apos 's/>[ \t]*</></g' apos ' ' filename]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
