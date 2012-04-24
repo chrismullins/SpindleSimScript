@@ -549,11 +549,11 @@ xmlwrite(filename,docNode);
 
 apos = '''';
 
-removeNewline = unix(['sed -i ' apos ':a;N;$!ba;s/\n//g' apos ' ' filename]);
+%removeNewline = unix(['sed -i ' apos ':a;N;$!ba;s/\n//g' apos ' ' filename]);
 
 %sed -i 's/>[ \t]*</></g' sedtest.xml 
 
-removeSpaces = unix(['sed -i ' apos 's/>[ \t]*</></g' apos ' ' filename]);
+%removeSpaces = unix(['sed -i ' apos 's/>[ \t]*</></g' apos ' ' filename]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
