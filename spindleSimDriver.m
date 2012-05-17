@@ -12,8 +12,8 @@ end
 %function = spindleSimDriver(showDisks,showCylinders,showSpheres,diskFC,cylinderFC,sphereFC)
 %KMT_LENGTH_FILE = 'Boundsfix T 1 C1.csv'; %keep in mind I deleted the top line of strings
 %SPINDLE_LENGTH_FILE = 'Boundsfix T 1 C1_Lip.csv';
-[KMT_LENGTH_FILE KLFPATH] = uigetfile('*.csv','Select the kMT Length File:');
-[SPINDLE_LENGTH_FILE SLFPATH] = uigetfile('*.csv','Select the Spindle Length File');
+[KMT_LENGTH_FILE KLFPATH] = uigetfile('*.csv','Select the simulation file:');
+%[SPINDLE_LENGTH_FILE SLFPATH] = uigetfile('*.csv','Select the Spindle Length File');
 NUM_TIMESTEPS = 100;
 NUM_KMTS = 16; %per side
 SIMULATION_DIRECTORY = 'SimDir';
@@ -23,10 +23,10 @@ ORIGIN = [6500 6500 0];
 
 
 fprintf('Reading the CSV files...\n');
-simFile = csvread([KLFPATH KMT_LENGTH_FILE]);
+simFile = csvread([KLFPATH KMT_LENGTH_FILE])
 simFile = simFile * 10^9;
-lengthFile = csvread([SLFPATH SPINDLE_LENGTH_FILE],1,1); %figure out how to not delete the header lines
-lengthFile = lengthFile * 10^9;
+%lengthFile = csvread([SLFPATH SPINDLE_LENGTH_FILE],1,1); %figure out how to not delete the header lines
+%lengthFile = lengthFile * 10^9;
 
 fprintf('Making the simulation directory...\n');
 makeSimDir = unix(['mkdir ' SIMULATION_DIRECTORY]);
@@ -47,14 +47,14 @@ z = SPINDLE_RADIUS*sin(t);
 fprintf('Performing iterations...\n');
 for iter = 1:NUM_TIMESTEPS
 
-	l = simFile(iter+1,1:NUM_KMTS);
-	r = simFile(iter+1,NUM_KMTS+1:2*NUM_KMTS);
+	l = simFile(iter,2:NUM_KMTS+1)
+	r = simFile(iter,NUM_KMTS+2:2*NUM_KMTS+1)
 
-	SPINDLE_LENGTH = lengthFile(iter+1,1);
+	SPINDLE_LENGTH = simFile(iter,1)
 	xplane = [ORIGIN(1)-(SPINDLE_LENGTH/2) ORIGIN(1)+(SPINDLE_LENGTH/2)];
 
-	l_pos = l + xplane(1);
-	r_pos = (-1*r) + xplane(2);
+	l_pos = l + xplane(1)
+	r_pos = (-1*r) + xplane(2)
 	
 	filename = [SIMULATION_DIRECTORY '/iter' num2str(iter) '.xml'];
 
