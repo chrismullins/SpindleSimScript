@@ -47,14 +47,14 @@ z = SPINDLE_RADIUS*sin(t);
 fprintf('Performing iterations...\n');
 for iter = 1:NUM_TIMESTEPS
 
-	l = simFile(iter,2:NUM_KMTS+1)
-	r = simFile(iter,NUM_KMTS+2:2*NUM_KMTS+1)
+	l = simFile(iter,2:NUM_KMTS+1);
+	r = simFile(iter,NUM_KMTS+2:2*NUM_KMTS+1);
 
-	SPINDLE_LENGTH = simFile(iter,1)
+	SPINDLE_LENGTH = simFile(iter,1);
 	xplane = [ORIGIN(1)-(SPINDLE_LENGTH/2) ORIGIN(1)+(SPINDLE_LENGTH/2)];
 
-	l_pos = l + xplane(1)
-	r_pos = (-1*r) + xplane(2)
+	l_pos = l + xplane(1);
+	r_pos = (-1*r) + xplane(2);
 	
 	filename = [SIMULATION_DIRECTORY '/iter' num2str(iter) '.xml'];
 
