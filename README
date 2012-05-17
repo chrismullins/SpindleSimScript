@@ -1,1 +1,24 @@
 This is a MATLAB script to take the output of a simulation from a csv file and create XML readable by the Microscope Simulator software.  
+
+
+Instructions:
+
+1) Clone the repository into a directory:
+	$ mkdir newDir
+	$ cd newDir
+	$ git clone git://github.com/chrismullins/SpindleSimScript.git
+	$ cd SpindleSimScript	
+
+2) Edit the following value(s) to correspond to your machine:
+	in initialize_cylinder.m, change the value "fn" to wherever you want SimDir, the directory containing all xml timesteps
+	
+3) In the MATLAB console (once you have navigated to the SpindleSimScript directory)
+	>> spindleSimScript
+	Then, choose the settings from the GUI based on your needs for visibility and fluorescence.
+	Click "Generate Simulation".  A directory should be created (if it wasn't already there) named SimDir.  Feel free to change the name of this directory in spindleSimDriver.m
+	When prompted for the simulation file, navigate to the SpindleSimScript/Examples directory and choose sample_output.csv
+	
+4)  Once MATLAB has finished generating all the xml, open a file in the Microscope Simulator by File->Open Simulation.
+
+
+If you have any questions, bugs, or feature requests, please email Christopher Mullins at christopher.r.mullins@gmail.com
