@@ -10,7 +10,7 @@
 %% radius:     this refers to the radius of the spindle, around which the
 %%             kMTs are placed
 %
-function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius,visParams)
+function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius,kmtUncertaintySphereRadius,visParams)
 
 SHOW_DISKS = visParams{1};
 SHOW_CYLINDERS = visParams{2};
@@ -19,6 +19,26 @@ DISK_CHANNEL = visParams{4};
 CYLINDER_CHANNEL = visParams{5};
 SPHERE_CHANNEL = visParams{6};
 
+% Perturb ktm positions by random uniform draw from the volume of
+% a sphere
+for i=1:length(ypos)
+    done = false;
+    randSphere = kmtUncertaintySphereRadius * rand([3 1]);
+    while (~done)
+        % If point not in sphere, draw again
+        if ( norm(randSphere) <= kmtUncertaintySphereRadius )
+            done = true;
+        else
+            randSphere = kmtUncertaintySphereRadius * rand([3 1]);
+        end
+    end
+
+    lkMTpos(i) = lkMTpos(i) + randSphere(1);
+    rkMTPos(i) = rkMTpos(i) + randSphere(1);
+    ypos(i)    = ypos(i)    + randSphere(2);
+    zpos(i)    = zpos(i)    + randSphere(3);
+end
+
 leftTubelengths = lkMTpos - xplanes(1);
 rightTubelengths = -rkMTpos + xplanes(2);
 
@@ -26,7 +46,8 @@ docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
 %fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
 %fn = ['C:/user/chris/Desktop/Andrew/' filename];
-fn = ['C:/Users/nanowork/Desktop/Deleteme' filename];
+%fn = ['C:/Users/nanowork/Desktop/Deleteme' filename];
+fn = ['/Users/quammen/Desktop/Deleteme' filename];
 
 SimulatedExperiments.setAttribute('file',fn);
 SimulatedExperiments.setAttribute('modified',datestr(now));
@@ -282,17 +303,20 @@ for i = 1:(numel(rkMTpos))
 	rtubePosX = docNode.createElement('PositionX');
 	rtube.appendChild(rtubePosX);
 	%rtubePosX.setAttribute('value',num2str(xplanes(2)));
-	rtubePosX.setAttribute('value',num2str( xplanes(2) - (rightTubelengths(i)/2) ));
+	x = xplanes(2) - (rightTubelengths(i)/2);
+	rtubePosX.setAttribute('value', num2str(x) );
 	rtubePosX.setAttribute('optimize','false');
 
 	rtubePosY = docNode.createElement('PositionY');
 	rtube.appendChild(rtubePosY);
-	rtubePosY.setAttribute('value',num2str(ypos(i)));
+	y = ypos(i);
+	rtubePosY.setAttribute('value',num2str(y));
 	rtubePosY.setAttribute('optimize','false');
 
 	rtubePosZ = docNode.createElement('PositionZ');
 	rtube.appendChild(rtubePosZ);
-	rtubePosZ.setAttribute('value',num2str(zpos(i)));
+	z = zpos(i);
+	rtubePosZ.setAttribute('value',num2str(z));
 	rtubePosZ.setAttribute('optimize','false');
 
 	rtubeRotAngle = docNode.createElement('RotationAngle');
@@ -377,17 +401,20 @@ for i = 1:(numel(lkMTpos))
 	ltubePosX = docNode.createElement('PositionX');
 	ltube.appendChild(ltubePosX);
 	%ltubePosX.setAttribute('value',num2str(xplanes(1)));
-	ltubePosX.setAttribute('value',num2str( xplanes(1) + (leftTubelengths(i)/2) ));
+	x = xplanes(1) + (leftTubelengths(i)/2);
+	ltubePosX.setAttribute('value',num2str(x));
 	ltubePosX.setAttribute('optimize','false');
 
 	ltubePosY = docNode.createElement('PositionY');
 	ltube.appendChild(ltubePosY);
-	ltubePosY.setAttribute('value',num2str(ypos(i)));
+	y = ypos(i);
+	ltubePosY.setAttribute('value',num2str(y));
 	ltubePosY.setAttribute('optimize','false');
 
 	ltubePosZ = docNode.createElement('PositionZ');
 	ltube.appendChild(ltubePosZ);
-	ltubePosZ.setAttribute('value',num2str(zpos(i)));
+	z = zpos(i);
+	ltubePosZ.setAttribute('value',num2str(z));
 	ltubePosZ.setAttribute('optimize','false');
 
 	ltubeRotAngle = docNode.createElement('RotationAngle');

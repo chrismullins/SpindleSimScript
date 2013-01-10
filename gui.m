@@ -5,6 +5,8 @@ showSpheres = 0;
 diskFC = 'all';
 cylinderFC = 'all';
 sphereFC = 'all';
+kmtRadius = 125;
+kmtUncertaintySphereRadius = 0;
 % GUI M-file for gui.fig
 %      GUI, by itself, creates a new GUI or raises the existing
 %      singleton*.
@@ -28,7 +30,7 @@ sphereFC = 'all';
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 05-Apr-2012 13:22:25
+% Last Modified by GUIDE v2.5 10-Jan-2013 14:57:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -175,8 +177,8 @@ showSpheres = get(hObject,'Value')
 % Hint: get(hObject,'Value') returns toggle state of checkbox3
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
+% --- Executes on button press in generateSimulationButton.
+function generateSimulationButton_Callback(hObject, eventdata, handles)
 
 showDisks = get(handles.checkbox1,'Value')
 if showDisks == 1
@@ -217,11 +219,15 @@ for i = 1:3
 		stringvec{i} = colorvec{4}
 	end
 end
+kmtRadius = str2double(get(handles.kmtRadiusEdit,'String'));
+kmtUncertaintySphereRadius = str2double(get(handles.kmtUncertaintySphereRadiusEdit,'String'));
 
 
-spindleSimDriver(showDisks,showCylinders,showSpheres,stringvec{1},stringvec{2},stringvec{3});
+spindleSimDriver(showDisks,showCylinders,showSpheres,...
+    stringvec{1},stringvec{2},stringvec{3},kmtRadius,...
+    kmtUncertaintySphereRadius);
 guidata(hObject,handles)
-% hObject    handle to pushbutton3 (see GCBO)
+% hObject    handle to generateSimulationButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -292,6 +298,52 @@ function popupmenu3_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtRadiusEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit as a double
+kmtRadius = str2double(get(hObject,'String'));
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
