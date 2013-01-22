@@ -19,6 +19,8 @@ DISK_CHANNEL = visParams{4};
 CYLINDER_CHANNEL = visParams{5};
 SPHERE_CHANNEL = visParams{6};
 
+NUM_DISK_FLUOROPHORES = 5;
+
 % Perturb ktm positions by random uniform draw from the volume of
 % a sphere
 for i=1:length(ypos)
@@ -202,8 +204,8 @@ lsfm.setAttribute('enabled','true');
 %lsfm.setAttribute('channel','all');
 lsfm.setAttribute('channel',DISK_CHANNEL);
 lsfm.setAttribute('density','100.000000');
-lsfm.setAttribute('numberOfFluorophores','0');
-lsfm.setAttribute('samplingMode','fixedDensity');
+lsfm.setAttribute('numberOfFluorophores',num2str(NUM_DISK_FLUOROPHORES));
+lsfm.setAttribute('samplingMode','fixedNumber');
 lsfm.setAttribute('samplePattern','singlePoint');
 lsfm.setAttribute('numberOfRingFluorophores','2');
 lsfm.setAttribute('ringRadius','10.000000');
@@ -269,8 +271,8 @@ rsfm.setAttribute('enabled','true');
 %rsfm.setAttribute('channel','all');
 rsfm.setAttribute('channel',DISK_CHANNEL);
 rsfm.setAttribute('density','100.000000');
-rsfm.setAttribute('numberOfFluorophores','0');
-rsfm.setAttribute('samplingMode','fixedDensity');
+rsfm.setAttribute('numberOfFluorophores',num2str(NUM_DISK_FLUOROPHORES));
+rsfm.setAttribute('samplingMode','fixedNumber');
 rsfm.setAttribute('samplePattern','singlePoint');
 rsfm.setAttribute('numberOfRingFluorophores','2');
 rsfm.setAttribute('ringRadius','10.000000');
