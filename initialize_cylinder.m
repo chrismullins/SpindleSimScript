@@ -23,22 +23,20 @@ NUM_DISK_FLUOROPHORES = 5;
 
 % Perturb ktm positions by random uniform draw from the volume of
 % a sphere
+lypos = ypos;
+lzpos = zpos;
+rypos = ypos;
+rzpos = zpos;
 for i=1:length(ypos)
-    done = false;
-    randSphere = kmtUncertaintySphereRadius * rand([3 1]);
-    while (~done)
-        % If point not in sphere, draw again
-        if ( norm(randSphere) <= kmtUncertaintySphereRadius )
-            done = true;
-        else
-            randSphere = kmtUncertaintySphereRadius * rand([3 1]);
-        end
-    end
+    randSphere1 = randomPointInSphere(kmtUncertaintySphereRadius);
+    lkMTpos(i)  = lkMTpos(i) + randSphere1(1);
+    lypos(i)    = ypos(i)    + randSphere1(2);
+    lzpos(i)    = zpos(i)    + randSphere1(3);
 
-    lkMTpos(i) = lkMTpos(i) + randSphere(1);
-    rkMTPos(i) = rkMTpos(i) + randSphere(1);
-    ypos(i)    = ypos(i)    + randSphere(2);
-    zpos(i)    = zpos(i)    + randSphere(3);
+    randSphere2 = randomPointInSphere(kmtUncertaintySphereRadius);
+    rkMTpos(i)  = rkMTpos(i) + randSphere2(1);
+    rypos(i)    = ypos(i)    + randSphere2(2);
+    rzpos(i)    = zpos(i)    + randSphere2(3);
 end
 
 leftTubelengths = lkMTpos - xplanes(1);
@@ -281,8 +279,8 @@ rsfm.setAttribute('randomizePatternOrientations','false');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RPlane
 
 %%%%%%%%%%%%%%%%%%%%% make points to represent the kMT positions %%%%%%%%%%%%%%%%
-initialize_points(docNode, ModelObjectList, 'lkMT', lkMTpos, lkMTpos, ypos, zpos, visParams);
-initialize_points(docNode, ModelObjectList, 'rkMT', lkMTpos, rkMTpos, ypos, zpos, visParams);
+initialize_points(docNode, ModelObjectList, 'lkMT', lkMTpos, lypos, lzpos, visParams);
+initialize_points(docNode, ModelObjectList, 'rkMT', rkMTpos, rypos, rzpos, visParams);
 
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%%
 % These aren't currently needed and serve only to slow down  %
@@ -311,13 +309,13 @@ for i = 1:(numel(rkMTpos))
 
 	rtubePosY = docNode.createElement('PositionY');
 	rtube.appendChild(rtubePosY);
-	y = ypos(i);
+	y = rypos(i);
 	rtubePosY.setAttribute('value',num2str(y));
 	rtubePosY.setAttribute('optimize','false');
 
 	rtubePosZ = docNode.createElement('PositionZ');
 	rtube.appendChild(rtubePosZ);
-	z = zpos(i);
+	z = rzpos(i);
 	rtubePosZ.setAttribute('value',num2str(z));
 	rtubePosZ.setAttribute('optimize','false');
 
@@ -409,13 +407,13 @@ for i = 1:(numel(lkMTpos))
 
 	ltubePosY = docNode.createElement('PositionY');
 	ltube.appendChild(ltubePosY);
-	y = ypos(i);
+	y = lypos(i);
 	ltubePosY.setAttribute('value',num2str(y));
 	ltubePosY.setAttribute('optimize','false');
 
 	ltubePosZ = docNode.createElement('PositionZ');
 	ltube.appendChild(ltubePosZ);
-	z = zpos(i);
+	z = lzpos(i);
 	ltubePosZ.setAttribute('value',num2str(z));
 	ltubePosZ.setAttribute('optimize','false');
 

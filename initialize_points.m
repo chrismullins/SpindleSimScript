@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%% make points %%%%%%%%%%%%%%%%
-function [] = initialize_points( docNode, modelObjectList, name, points, xpos,ypos,zpos, visParams)
+function [] = initialize_points( docNode, modelObjectList, name, xpos,ypos,zpos, visParams)
 
 SHOW_DISKS = visParams{1};
 SHOW_CYLINDERS = visParams{2};
