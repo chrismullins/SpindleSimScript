@@ -10,7 +10,7 @@
 %% radius:     this refers to the radius of the spindle, around which the
 %%             kMTs are placed
 %
-function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius,kmtUncertaintySphereRadius,visParams)
+function [] = initialize_cylinder(filename,t, lkMTpos, rkMTpos,xplanes,radius1,kmtUncertaintySphereRadius1,radius2,kmtUncertaintySphereRadius2,radius3,kmtUncertaintySphereRadius3,visParams)
 
 SHOW_DISKS = visParams{1};
 SHOW_CYLINDERS = visParams{2};
@@ -18,29 +18,71 @@ SHOW_SPHERES = visParams{3};
 DISK_CHANNEL = visParams{4};
 CYLINDER_CHANNEL = visParams{5};
 SPHERE_CHANNEL = visParams{6};
+ORIGIN = [6500 6500 0];
 
 NUM_DISK_FLUOROPHORES = 5;
 
+ypos1 = radius1*cos(t) + ORIGIN(2);
+zpos1 = radius1*sin(t);
+ypos2 = radius2*cos(t) + ORIGIN(2);
+zpos2 = radius2*sin(t);
+ypos3 = radius3*cos(t) + ORIGIN(2);
+zpos3 = radius3*sin(t);
+
 % Perturb ktm positions by random uniform draw from the volume of
 % a sphere
-lypos = ypos;
-lzpos = zpos;
-rypos = ypos;
-rzpos = zpos;
-for i=1:length(ypos)
-    randSphere1 = randomPointInSphere(kmtUncertaintySphereRadius);
-    lkMTpos(i)  = lkMTpos(i) + randSphere1(1);
-    lypos(i)    = ypos(i)    + randSphere1(2);
-    lzpos(i)    = zpos(i)    + randSphere1(3);
+lxpos1 = lkMTpos;
+lypos1 = ypos1;
+lzpos1 = zpos1;
+rxpos1 = rkMTpos;
+rypos1 = ypos1;
+rzpos1 = zpos1;
+lxpos2 = lkMTpos;
+lypos2 = ypos2;
+lzpos2 = zpos2;
+rxpos2 = rkMTpos;
+rypos2 = ypos2;
+rzpos2 = zpos2;
+lxpos3 = lkMTpos;
+lypos3 = ypos3;
+lzpos3 = zpos3;
+rxpos3 = rkMTpos;
+rypos3 = ypos3;
+rzpos3 = zpos3;
+for i=1:length(ypos1)
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius1);
+    lxpos1(i)  = lxpos1(i) + randSphere(1);
+    lypos1(i)  = lypos1(i) + randSphere(2);
+    lzpos1(i)  = lzpos1(i) + randSphere(3);
 
-    randSphere2 = randomPointInSphere(kmtUncertaintySphereRadius);
-    rkMTpos(i)  = rkMTpos(i) + randSphere2(1);
-    rypos(i)    = ypos(i)    + randSphere2(2);
-    rzpos(i)    = zpos(i)    + randSphere2(3);
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius1);
+    rxpos1(i)  = rxpos1(i) + randSphere(1);
+    rypos1(i)  = rypos1(i) + randSphere(2);
+    rzpos1(i)  = rzpos1(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius2);
+    lxpos2(i)  = lxpos2(i) + randSphere(1);
+    lypos2(i)  = lypos2(i) + randSphere(2);
+    lzpos2(i)  = lzpos2(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius2);
+    rxpos2(i)  = rxpos2(i) + randSphere(1);
+    rypos2(i)  = rypos2(i) + randSphere(2);
+    rzpos2(i)  = rzpos2(i) + randSphere(3);
+    
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius3);
+    lxpos3(i)  = lxpos3(i) + randSphere(1);
+    lypos3(i)  = lypos3(i) + randSphere(2);
+    lzpos3(i)  = lzpos3(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius3);
+    rxpos3(i)  = rxpos3(i) + randSphere(1);
+    rypos3(i)  = rypos3(i) + randSphere(2);
+    rzpos3(i)  = rzpos3(i) + randSphere(3);
 end
 
-leftTubelengths = lkMTpos - xplanes(1);
-rightTubelengths = -rkMTpos + xplanes(2);
+leftTubelengths  =  lxpos1 - xplanes(1);
+rightTubelengths = -rxpos1 + xplanes(2);
 
 docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
@@ -193,7 +235,7 @@ lRotVecZ.setAttribute('optimize','false');
 
 lRadius = docNode.createElement('Radius');
 LPlane.appendChild(lRadius);
-lRadius.setAttribute('value',num2str(radius));
+lRadius.setAttribute('value',num2str(radius1));
 lRadius.setAttribute('optimize','false');
 
 lsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -260,7 +302,7 @@ rRotVecZ.setAttribute('optimize','false');
 
 rRadius = docNode.createElement('Radius');
 RPlane.appendChild(rRadius);
-rRadius.setAttribute('value',num2str(radius));
+rRadius.setAttribute('value',num2str(radius1));
 rRadius.setAttribute('optimize','false');
 
 rsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -279,15 +321,19 @@ rsfm.setAttribute('randomizePatternOrientations','false');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RPlane
 
 %%%%%%%%%%%%%%%%%%%%% make points to represent the kMT positions %%%%%%%%%%%%%%%%
-initialize_points(docNode, ModelObjectList, 'lkMT', lkMTpos, lypos, lzpos, visParams);
-initialize_points(docNode, ModelObjectList, 'rkMT', rkMTpos, rypos, rzpos, visParams);
+initialize_points(docNode, ModelObjectList, 'lkMT1', lxpos1, lypos1, lzpos1, visParams);
+initialize_points(docNode, ModelObjectList, 'rkMT1', rxpos1, rypos1, rzpos1, visParams);
+initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, visParams);
+initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, visParams);
+initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, visParams);
+initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, visParams);
 
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%%
 % These aren't currently needed and serve only to slow down  %
 % loading of the files.                                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for i = 1:(numel(rkMTpos))
+for i = 1:(numel(rxpos1))
 	rtube = docNode.createElement('CylinderModel');
 	ModelObjectList.appendChild(rtube);
 
@@ -309,13 +355,13 @@ for i = 1:(numel(rkMTpos))
 
 	rtubePosY = docNode.createElement('PositionY');
 	rtube.appendChild(rtubePosY);
-	y = rypos(i);
+	y = rypos1(i);
 	rtubePosY.setAttribute('value',num2str(y));
 	rtubePosY.setAttribute('optimize','false');
 
 	rtubePosZ = docNode.createElement('PositionZ');
 	rtube.appendChild(rtubePosZ);
-	z = rzpos(i);
+	z = rzpos1(i);
 	rtubePosZ.setAttribute('value',num2str(z));
 	rtubePosZ.setAttribute('optimize','false');
 
@@ -385,7 +431,7 @@ for i = 1:(numel(rkMTpos))
 end
 
 
-for i = 1:(numel(lkMTpos))
+for i = 1:(numel(lxpos1))
 	ltube = docNode.createElement('CylinderModel');
 	ModelObjectList.appendChild(ltube);
 
@@ -407,13 +453,13 @@ for i = 1:(numel(lkMTpos))
 
 	ltubePosY = docNode.createElement('PositionY');
 	ltube.appendChild(ltubePosY);
-	y = lypos(i);
+	y = lypos1(i);
 	ltubePosY.setAttribute('value',num2str(y));
 	ltubePosY.setAttribute('optimize','false');
 
 	ltubePosZ = docNode.createElement('PositionZ');
 	ltube.appendChild(ltubePosZ);
-	z = lzpos(i);
+	z = lzpos1(i);
 	ltubePosZ.setAttribute('value',num2str(z));
 	ltubePosZ.setAttribute('optimize','false');
 

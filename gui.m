@@ -30,7 +30,7 @@ kmtUncertaintySphereRadius = 0;
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 10-Jan-2013 14:57:51
+% Last Modified by GUIDE v2.5 06-Feb-2013 16:19:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -219,13 +219,19 @@ for i = 1:3
 		stringvec{i} = colorvec{4}
 	end
 end
-kmtRadius = str2double(get(handles.kmtRadiusEdit,'String'));
-kmtUncertaintySphereRadius = str2double(get(handles.kmtUncertaintySphereRadiusEdit,'String'));
+kmtRadius1 = str2double(get(handles.kmtRadiusEdit1,'String'));
+kmtUncertaintySphereRadius1 = str2double(get(handles.kmtUncertaintySphereRadiusEdit1,'String'));
+kmtRadius2 = str2double(get(handles.kmtRadiusEdit2,'String'));
+kmtUncertaintySphereRadius2 = str2double(get(handles.kmtUncertaintySphereRadiusEdit2,'String'));
+kmtRadius3 = str2double(get(handles.kmtRadiusEdit3,'String'));
+kmtUncertaintySphereRadius3 = str2double(get(handles.kmtUncertaintySphereRadiusEdit3,'String'));
 
 
 spindleSimDriver(showDisks,showCylinders,showSpheres,...
-    stringvec{1},stringvec{2},stringvec{3},kmtRadius,...
-    kmtUncertaintySphereRadius);
+    stringvec{1},stringvec{2},stringvec{3},...
+    kmtRadius1,kmtUncertaintySphereRadius1,...
+    kmtRadius2,kmtUncertaintySphereRadius2,...
+    kmtRadius3,kmtUncertaintySphereRadius3);
 guidata(hObject,handles)
 % hObject    handle to generateSimulationButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -305,18 +311,18 @@ end
 
 
 
-function kmtRadiusEdit_Callback(hObject, eventdata, handles)
-% hObject    handle to kmtRadiusEdit (see GCBO)
+function kmtRadiusEdit1_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of kmtRadiusEdit as text
-%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit as a double
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit1 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit1 as a double
 kmtRadius = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
-function kmtRadiusEdit_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to kmtRadiusEdit (see GCBO)
+function kmtRadiusEdit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -328,18 +334,110 @@ end
 
 
 
-function kmtUncertaintySphereRadiusEdit_Callback(hObject, eventdata, handles)
-% hObject    handle to kmtUncertaintySphereRadiusEdit (see GCBO)
+function kmtUncertaintySphereRadiusEdit1_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit as text
-%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit as a double
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit1 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit1 as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function kmtUncertaintySphereRadiusEdit_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to kmtUncertaintySphereRadiusEdit (see GCBO)
+function kmtUncertaintySphereRadiusEdit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtRadiusEdit2_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit2 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtRadiusEdit3_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit3 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit2_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit2 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit3_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit3 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
