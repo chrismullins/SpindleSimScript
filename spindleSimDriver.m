@@ -1,20 +1,6 @@
-function u = spindleSimDriver(varargin)
-nArgs = numel(varargin);
-if nArgs == 12
-visParams = varargin;
-showDisks = varargin{1};
-showCylinders = varargin{2};
-showSpheres = varargin{3};
-diskFC = varargin{4};
-cylinderFC = varargin{5};
-sphereFC = varargin{6};
-kmtRadius1 = varargin{7};
-kmtUncertaintySphereRadius1 = varargin{8};
-kmtRadius2 = varargin{9};
-kmtUncertaintySphereRadius2 = varargin{10};
-kmtRadius3 = varargin{11};
-kmtUncertaintySphereRadius3 = varargin{12};
-end
+function u = spindleSimDriver( params )
+%visParams = varargin;
+
 %function = spindleSimDriver(showDisks,showCylinders,showSpheres,diskFC,cylinderFC,sphereFC)
 %KMT_LENGTH_FILE = 'Boundsfix T 1 C1.csv'; %keep in mind I deleted the top line of strings
 %SPINDLE_LENGTH_FILE = 'Boundsfix T 1 C1_Lip.csv';
@@ -61,10 +47,7 @@ for iter = 1:NUM_TIMESTEPS
 	filename = [SIMULATION_DIRECTORY '/iter' num2str(iter) '.xml'];
 
 	initialize_cylinder(filename, t,l_pos,r_pos,xplane,...
-        kmtRadius1,kmtUncertaintySphereRadius1,...
-        kmtRadius2,kmtUncertaintySphereRadius2,...
-        kmtRadius3,kmtUncertaintySphereRadius3,...
-        visParams);
+        params);
 end
 
 

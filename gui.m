@@ -173,60 +173,40 @@ showSpheres = get(hObject,'Value');
 % --- Executes on button press in generateSimulationButton.
 function generateSimulationButton_Callback(hObject, eventdata, handles)
 
-showDisks = get(handles.showDisksCheckbox,'Value')
-if showDisks == 1
-	showDisks = 'true'
-	else
-	showDisks = 'false'
+s = struct('name','ModelSettings');
+
+s.showDisksText = 'false';
+if get(handles.showDisksCheckbox,'Value') == 1
+    s.showDisksText = 'true';
 end
-showCylinders = get(handles.showCylindersCheckbox,'Value')
-if showCylinders == 1
-	showCylinders = 'true'
-	else
-	showCylinders = 'false'
+
+s.showCylindersText = 'false';
+if get(handles.showCylindersCheckbox,'Value') == 1
+	s.showCylindersText = 'true';
 end
-showSpheres = get(handles.showSpheresCheckbox,'Value')
-if showSpheres == 1
-	showSpheres = 'true'
-	else
-	showSpheres = 'false'
+
+s.showSpheresText = 'false';
+if get(handles.showSpheresCheckbox,'Value') == 1
+    s.showSpheresText = 'true';
 end
-%fprintf('showSpheres = %s',showSpheres)
-diskFC = get(handles.diskColorMenu,'Value')
-cylinderFC = get(handles.cylinderColorMenu,'Value')
-sphereFC = get(handles.sphereColorMenu,'Value')
-fcvec = [diskFC cylinderFC sphereFC]
-stringvec = {'none','none','none'}
-colorvec = {'red','green','blue','all'}
-for i = 1:3
-	if fcvec(i) == 1
-		stringvec{i} = colorvec{1}
-	end
-	if fcvec(i) == 2
-		stringvec{i} = colorvec{2}
-	end
-	if fcvec(i) == 3
-		stringvec{i} = colorvec{3}
-	end
-	if fcvec(i) == 4
-		stringvec{i} = colorvec{4}
-	end
-end
-kmtRadius1 = str2double(get(handles.kmtRadiusEdit1,'String'));
-kmtUncertaintySphereRadius1 = str2double(get(handles.kmtUncertaintySphereRadiusEdit1,'String'));
-kmtShow2 = get(handles.showKmt2Checkbox,'Value') == 1;  
-kmtRadius2 = str2double(get(handles.kmtRadiusEdit2,'String'));
-kmtUncertaintySphereRadius2 = str2double(get(handles.kmtUncertaintySphereRadiusEdit2,'String'));
-kmtShow3 = get(handles.showKmt3Checkbox,'Value') == 1;
-kmtRadius3 = str2double(get(handles.kmtRadiusEdit3,'String'));
-kmtUncertaintySphereRadius3 = str2double(get(handles.kmtUncertaintySphereRadiusEdit3,'String'));
+
+% Map menu item numbers to fluorescence channel names
+colorvec = {'red','green','blue','all'};
+s.diskFC     = colorvec{ get(handles.diskColorMenu,'Value') };
+s.cylinderFC = colorvec{ get(handles.cylinderColorMenu,'Value') };
+s.sphereFC   = colorvec{ get(handles.sphereColorMenu,'Value') };
+
+s.kmtRadius1 = str2double(get(handles.kmtRadiusEdit1,'String'));
+s.kmtUncertaintySphereRadius1 = str2double(get(handles.kmtUncertaintySphereRadiusEdit1,'String'));
+s.kmtShow2 = get(handles.showKmt2Checkbox,'Value') == 1;  
+s.kmtRadius2 = str2double(get(handles.kmtRadiusEdit2,'String'));
+s.kmtUncertaintySphereRadius2 = str2double(get(handles.kmtUncertaintySphereRadiusEdit2,'String'));
+s.kmtShow3 = get(handles.showKmt3Checkbox,'Value') == 1;
+s.kmtRadius3 = str2double(get(handles.kmtRadiusEdit3,'String'));
+s.kmtUncertaintySphereRadius3 = str2double(get(handles.kmtUncertaintySphereRadiusEdit3,'String'));
 
 
-spindleSimDriver(showDisks,showCylinders,showSpheres,...
-    stringvec{1},stringvec{2},stringvec{3},...
-    kmtRadius1,kmtUncertaintySphereRadius1,...
-    kmtShow2,kmtRadius2,kmtUncertaintySphereRadius2,...
-    kmtShow3,kmtRadius3,kmtUncertaintySphereRadius3);
+spindleSimDriver( s );
 guidata(hObject,handles)
 % hObject    handle to generateSimulationButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB

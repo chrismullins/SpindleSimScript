@@ -10,24 +10,35 @@
 %% radius:     this refers to the radius of the spindle, around which the
 %%             kMTs are placed
 %
-function [] = initialize_cylinder(filename,t, lkMTpos, rkMTpos,xplanes,radius1,kmtUncertaintySphereRadius1,radius2,kmtUncertaintySphereRadius2,radius3,kmtUncertaintySphereRadius3,visParams)
+function [] = initialize_cylinder(filename,t, lkMTpos, rkMTpos,xplanes,params)
 
-SHOW_DISKS = visParams{1};
-SHOW_CYLINDERS = visParams{2};
-SHOW_SPHERES = visParams{3};
-DISK_CHANNEL = visParams{4};
-CYLINDER_CHANNEL = visParams{5};
-SPHERE_CHANNEL = visParams{6};
+SHOW_DISKS = params.showDisksText;
+SHOW_CYLINDERS = params.showCylindersText;
+DISK_CHANNEL = params.diskFC;
+CYLINDER_CHANNEL = params.cylinderFC;
 ORIGIN = [6500 6500 0];
 
 NUM_DISK_FLUOROPHORES = 5;
 
-ypos1 = radius1*cos(t) + ORIGIN(2);
-zpos1 = radius1*sin(t);
-ypos2 = radius2*cos(t) + ORIGIN(2);
-zpos2 = radius2*sin(t);
-ypos3 = radius3*cos(t) + ORIGIN(2);
-zpos3 = radius3*sin(t);
+% Always show the first set of kmts
+kmtShow2 = params.kmtShow2;
+kmtShow3 = params.kmtShow3;
+
+kmtRadius1 = params.kmtRadius1;
+kmtRadius2 = params.kmtRadius2;
+kmtRadius3 = params.kmtRadius3;
+
+kmtUncertaintySphereRadius1 = params.kmtUncertaintySphereRadius1;
+kmtUncertaintySphereRadius2 = params.kmtUncertaintySphereRadius2;
+kmtUncertaintySphereRadius3 = params.kmtUncertaintySphereRadius3;
+
+
+ypos1 = kmtRadius1*cos(t) + ORIGIN(2);
+zpos1 = kmtRadius1*sin(t);
+ypos2 = kmtRadius2*cos(t) + ORIGIN(2);
+zpos2 = kmtRadius2*sin(t);
+ypos3 = kmtRadius3*cos(t) + ORIGIN(2);
+zpos3 = kmtRadius3*sin(t);
 
 % Perturb ktm positions by random uniform draw from the volume of
 % a sphere
@@ -235,7 +246,7 @@ lRotVecZ.setAttribute('optimize','false');
 
 lRadius = docNode.createElement('Radius');
 LPlane.appendChild(lRadius);
-lRadius.setAttribute('value',num2str(radius1));
+lRadius.setAttribute('value',num2str(kmtRadius1));
 lRadius.setAttribute('optimize','false');
 
 lsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -302,7 +313,7 @@ rRotVecZ.setAttribute('optimize','false');
 
 rRadius = docNode.createElement('Radius');
 RPlane.appendChild(rRadius);
-rRadius.setAttribute('value',num2str(radius1));
+rRadius.setAttribute('value',num2str(kmtRadius1));
 rRadius.setAttribute('optimize','false');
 
 rsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -321,13 +332,15 @@ rsfm.setAttribute('randomizePatternOrientations','false');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RPlane
 
 %%%%%%%%%%%%%%%%%%%%% make points to represent the kMT positions %%%%%%%%%%%%%%%%
-initialize_points(docNode, ModelObjectList, 'lkMT1', lxpos1, lypos1, lzpos1, visParams);
-initialize_points(docNode, ModelObjectList, 'rkMT1', rxpos1, rypos1, rzpos1, visParams);
-initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, visParams);
-initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, visParams);
-initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, visParams);
-initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, visParams);
+initialize_points(docNode, ModelObjectList, 'lkMT1', lxpos1, lypos1, lzpos1, params);
+initialize_points(docNode, ModelObjectList, 'rkMT1', rxpos1, rypos1, rzpos1, params);
 
+initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, params);
+initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, params);
+
+initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, params);
+initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, params);
+  
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%%
 % These aren't currently needed and serve only to slow down  %
 % loading of the files.                                      %

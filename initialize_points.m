@@ -1,12 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%% make points %%%%%%%%%%%%%%%%
-function [] = initialize_points( docNode, modelObjectList, name, xpos,ypos,zpos, visParams)
+function [] = initialize_points( docNode, modelObjectList, name, xpos,ypos,zpos, params)
 
-SHOW_DISKS = visParams{1};
-SHOW_CYLINDERS = visParams{2};
-SHOW_SPHERES = visParams{3};
-DISK_CHANNEL = visParams{4};
-CYLINDER_CHANNEL = visParams{5};
-SPHERE_CHANNEL = visParams{6};
+SHOW_SPHERES   = params.showSpheresText;
+SPHERE_CHANNEL = params.sphereFC;
 
 lkMT = docNode.createElement('PointSetModel');
 modelObjectList.appendChild(lkMT);
