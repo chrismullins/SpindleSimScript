@@ -335,12 +335,16 @@ rsfm.setAttribute('randomizePatternOrientations','false');
 initialize_points(docNode, ModelObjectList, 'lkMT1', lxpos1, lypos1, lzpos1, params);
 initialize_points(docNode, ModelObjectList, 'rkMT1', rxpos1, rypos1, rzpos1, params);
 
-initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, params);
-initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, params);
+if kmtShow2
+    initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, params);
+    initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, params);
+end
 
-initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, params);
-initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, params);
-  
+if kmtShow3
+    initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, params);
+    initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, params);
+end
+
 %%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%%
 % These aren't currently needed and serve only to slow down  %
 % loading of the files.                                      %
