@@ -1,10 +1,5 @@
 function varargout = spindleGUI(varargin)
-showDisks = 0;
-showCylinders = 0;
-showSpheres = 0;
-diskFC = 'all';
-cylinderFC = 'all';
-sphereFC = 'all';
+
 % GUI M-file for gui.fig
 %      GUI, by itself, creates a new GUI or raises the existing
 %      singleton*.
@@ -28,7 +23,7 @@ sphereFC = 'all';
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 05-Apr-2012 13:22:25
+% Last Modified by GUIDE v2.5 12-Feb-2013 14:54:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -148,98 +143,90 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox1.
-function checkbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox1 (see GCBO)
+% --- Executes on button press in showDisksCheckbox.
+function showDisksCheckbox_Callback(hObject, eventdata, handles)
+% hObject    handle to showDisksCheckbox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-showDisks = get(hObject,'Value')
-% Hint: get(hObject,'Value') returns toggle state of checkbox1
+showDisks = get(hObject,'Value');
+% Hint: get(hObject,'Value') returns toggle state of showDisksCheckbox
 
 
-% --- Executes on button press in checkbox2.
-function checkbox2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox2 (see GCBO)
+% --- Executes on button press in showCylindersCheckbox.
+function showCylindersCheckbox_Callback(hObject, eventdata, handles)
+% hObject    handle to showCylindersCheckbox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-showCylinders = get(hObject,'Value')
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
+showCylinders = get(hObject,'Value');
+% Hint: get(hObject,'Value') returns toggle state of showCylindersCheckbox
 
 
-% --- Executes on button press in checkbox3.
-function checkbox3_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox3 (see GCBO)
+% --- Executes on button press in showSpheresCheckbox.
+function showSpheresCheckbox_Callback(hObject, eventdata, handles)
+% hObject    handle to showSpheresCheckbox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-showSpheres = get(hObject,'Value')
-% Hint: get(hObject,'Value') returns toggle state of checkbox3
+showSpheres = get(hObject,'Value');
+% Hint: get(hObject,'Value') returns toggle state of showSpheresCheckbox
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
+% --- Executes on button press in generateSimulationButton.
+function generateSimulationButton_Callback(hObject, eventdata, handles)
 
-showDisks = get(handles.checkbox1,'Value')
-if showDisks == 1
-	showDisks = 'true'
-	else
-	showDisks = 'false'
-end
-showCylinders = get(handles.checkbox2,'Value')
-if showCylinders == 1
-	showCylinders = 'true'
-	else
-	showCylinders = 'false'
-end
-showSpheres = get(handles.checkbox3,'Value')
-if showSpheres == 1
-	showSpheres = 'true'
-	else
-	showSpheres = 'false'
-end
-%fprintf('showSpheres = %s',showSpheres)
-diskFC = get(handles.popupmenu1,'Value')
-cylinderFC = get(handles.popupmenu2,'Value')
-sphereFC = get(handles.popupmenu3,'Value')
-fcvec = [diskFC cylinderFC sphereFC]
-stringvec = {'none','none','none'}
-colorvec = {'red','green','blue','all'}
-for i = 1:3
-	if fcvec(i) == 1
-		stringvec{i} = colorvec{1}
-	end
-	if fcvec(i) == 2
-		stringvec{i} = colorvec{2}
-	end
-	if fcvec(i) == 3
-		stringvec{i} = colorvec{3}
-	end
-	if fcvec(i) == 4
-		stringvec{i} = colorvec{4}
-	end
+s = struct('name','ModelSettings');
+
+s.showDisksText = 'false';
+if get(handles.showDisksCheckbox,'Value') == 1
+    s.showDisksText = 'true';
 end
 
+s.showCylindersText = 'false';
+if get(handles.showCylindersCheckbox,'Value') == 1
+	s.showCylindersText = 'true';
+end
 
-spindleSimDriver(showDisks,showCylinders,showSpheres,stringvec{1},stringvec{2},stringvec{3});
+s.showSpheresText = 'false';
+if get(handles.showSpheresCheckbox,'Value') == 1
+    s.showSpheresText = 'true';
+end
+
+% Map menu item numbers to fluorescence channel names
+colorvec = {'red','green','blue','all'};
+s.diskFC     = colorvec{ get(handles.diskColorMenu,'Value') };
+s.cylinderFC = colorvec{ get(handles.cylinderColorMenu,'Value') };
+s.sphereFC   = colorvec{ get(handles.sphereColorMenu,'Value') };
+
+s.kmtRadius1 = str2double(get(handles.kmtRadiusEdit1,'String'));
+s.kmtUncertaintySphereRadius1 = str2double(get(handles.kmtUncertaintySphereRadiusEdit1,'String'));
+s.kmtShow2 = get(handles.showKmt2Checkbox,'Value') == 1;  
+s.kmtRadius2 = str2double(get(handles.kmtRadiusEdit2,'String'));
+s.kmtUncertaintySphereRadius2 = str2double(get(handles.kmtUncertaintySphereRadiusEdit2,'String'));
+s.kmtShow3 = get(handles.showKmt3Checkbox,'Value') == 1;
+s.kmtRadius3 = str2double(get(handles.kmtRadiusEdit3,'String'));
+s.kmtUncertaintySphereRadius3 = str2double(get(handles.kmtUncertaintySphereRadiusEdit3,'String'));
+
+
+spindleSimDriver( s );
 guidata(hObject,handles)
-% hObject    handle to pushbutton3 (see GCBO)
+% hObject    handle to generateSimulationButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% --- Executes on selection change in diskColorMenu.
+function diskColorMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to diskColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-contents = cellstr(get(hObject,'String'))
-diskFC = contents{get(hObject,'Value')}
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+contents = cellstr(get(hObject,'String'));
+diskFC = contents{get(hObject,'Value')};
+% Hints: contents = cellstr(get(hObject,'String')) returns diskColorMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from diskColorMenu
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+function diskColorMenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to diskColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -250,20 +237,20 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu2.
-function popupmenu2_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
+% --- Executes on selection change in cylinderColorMenu.
+function cylinderColorMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to cylinderColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-contents = cellstr(get(hObject,'String'))
-cylinderFC = contents{get(hObject,'Value')}
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu2
+contents = cellstr(get(hObject,'String'));
+cylinderFC = contents{get(hObject,'Value')};
+% Hints: contents = cellstr(get(hObject,'String')) returns cylinderColorMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from cylinderColorMenu
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
+function cylinderColorMenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to cylinderColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -274,20 +261,20 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu3.
-function popupmenu3_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu3 (see GCBO)
+% --- Executes on selection change in sphereColorMenu.
+function sphereColorMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to sphereColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-contents = cellstr(get(hObject,'String'))
-sphereFC = contents{get(hObject,'Value')}
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu3 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu3
+contents = cellstr(get(hObject,'String'));
+sphereFC = contents{get(hObject,'Value')};
+% Hints: contents = cellstr(get(hObject,'String')) returns sphereColorMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from sphereColorMenu
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu3 (see GCBO)
+function sphereColorMenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sphereColorMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -296,3 +283,159 @@ function popupmenu3_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+function kmtRadiusEdit1_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit1 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit1 as a double
+kmtRadius = str2double(get(hObject,'String'));
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit1_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit1 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtRadiusEdit2_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit2 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtRadiusEdit3_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtRadiusEdit3 as text
+%        str2double(get(hObject,'String')) returns contents of kmtRadiusEdit3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtRadiusEdit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit2_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit2 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function kmtUncertaintySphereRadiusEdit3_Callback(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kmtUncertaintySphereRadiusEdit3 as text
+%        str2double(get(hObject,'String')) returns contents of kmtUncertaintySphereRadiusEdit3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kmtUncertaintySphereRadiusEdit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kmtUncertaintySphereRadiusEdit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in showKmt2Checkbox.
+function showKmt2Checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to showKmt2Checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of showKmt2Checkbox
+
+
+% --- Executes on button press in showKmt3Checkbox.
+function showKmt3Checkbox_Callback(hObject, eventdata, handles)
+% hObject    handle to showKmt3Checkbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of showKmt3Checkbox

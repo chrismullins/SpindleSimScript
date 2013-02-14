@@ -10,22 +10,98 @@
 %% radius:     this refers to the radius of the spindle, around which the
 %%             kMTs are placed
 %
-function [] = initialize_cylinder(filename,ypos,zpos, lkMTpos, rkMTpos,xplanes,radius,visParams)
+function [] = initialize_cylinder(filename,t, lkMTpos, rkMTpos,xplanes,params)
 
-SHOW_DISKS = visParams{1};
-SHOW_CYLINDERS = visParams{2};
-SHOW_SPHERES = visParams{3};
-DISK_CHANNEL = visParams{4};
-CYLINDER_CHANNEL = visParams{5};
-SPHERE_CHANNEL = visParams{6};
+SHOW_DISKS = params.showDisksText;
+SHOW_CYLINDERS = params.showCylindersText;
+DISK_CHANNEL = params.diskFC;
+CYLINDER_CHANNEL = params.cylinderFC;
+ORIGIN = [6500 6500 0];
 
-leftTubelengths = lkMTpos - xplanes(1);
-rightTubelengths = -rkMTpos + xplanes(2);
+NUM_DISK_FLUOROPHORES = 5;
+
+% Always show the first set of kmts
+kmtShow2 = params.kmtShow2;
+kmtShow3 = params.kmtShow3;
+
+kmtRadius1 = params.kmtRadius1;
+kmtRadius2 = params.kmtRadius2;
+kmtRadius3 = params.kmtRadius3;
+
+kmtUncertaintySphereRadius1 = params.kmtUncertaintySphereRadius1;
+kmtUncertaintySphereRadius2 = params.kmtUncertaintySphereRadius2;
+kmtUncertaintySphereRadius3 = params.kmtUncertaintySphereRadius3;
+
+
+ypos1 = kmtRadius1*cos(t) + ORIGIN(2);
+zpos1 = kmtRadius1*sin(t);
+ypos2 = kmtRadius2*cos(t) + ORIGIN(2);
+zpos2 = kmtRadius2*sin(t);
+ypos3 = kmtRadius3*cos(t) + ORIGIN(2);
+zpos3 = kmtRadius3*sin(t);
+
+% Perturb ktm positions by random uniform draw from the volume of
+% a sphere
+lxpos1 = lkMTpos;
+lypos1 = ypos1;
+lzpos1 = zpos1;
+rxpos1 = rkMTpos;
+rypos1 = ypos1;
+rzpos1 = zpos1;
+lxpos2 = lkMTpos;
+lypos2 = ypos2;
+lzpos2 = zpos2;
+rxpos2 = rkMTpos;
+rypos2 = ypos2;
+rzpos2 = zpos2;
+lxpos3 = lkMTpos;
+lypos3 = ypos3;
+lzpos3 = zpos3;
+rxpos3 = rkMTpos;
+rypos3 = ypos3;
+rzpos3 = zpos3;
+for i=1:length(ypos1)
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius1);
+    lxpos1(i)  = lxpos1(i) + randSphere(1);
+    lypos1(i)  = lypos1(i) + randSphere(2);
+    lzpos1(i)  = lzpos1(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius1);
+    rxpos1(i)  = rxpos1(i) + randSphere(1);
+    rypos1(i)  = rypos1(i) + randSphere(2);
+    rzpos1(i)  = rzpos1(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius2);
+    lxpos2(i)  = lxpos2(i) + randSphere(1);
+    lypos2(i)  = lypos2(i) + randSphere(2);
+    lzpos2(i)  = lzpos2(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius2);
+    rxpos2(i)  = rxpos2(i) + randSphere(1);
+    rypos2(i)  = rypos2(i) + randSphere(2);
+    rzpos2(i)  = rzpos2(i) + randSphere(3);
+    
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius3);
+    lxpos3(i)  = lxpos3(i) + randSphere(1);
+    lypos3(i)  = lypos3(i) + randSphere(2);
+    lzpos3(i)  = lzpos3(i) + randSphere(3);
+
+    randSphere = randomPointInSphere(kmtUncertaintySphereRadius3);
+    rxpos3(i)  = rxpos3(i) + randSphere(1);
+    rypos3(i)  = rypos3(i) + randSphere(2);
+    rzpos3(i)  = rzpos3(i) + randSphere(3);
+end
+
+leftTubelengths  =  lxpos1 - xplanes(1);
+rightTubelengths = -rxpos1 + xplanes(2);
 
 docNode = com.mathworks.xml.XMLUtils.createDocument('SimulatedExperiments');
 SimulatedExperiments = docNode.getDocumentElement;
 %fn = ['C:/users/chris/Desktop/NSRG/Spindle/script/' filename];
-fn = ['C:/user/chris/Desktop/Andrew/' filename];
+%fn = ['C:/user/chris/Desktop/Andrew/' filename];
+%fn = ['C:/Users/nanowork/Desktop/Deleteme' filename];
+fn = ['/Users/quammen/Desktop/Deleteme' filename];
+
 SimulatedExperiments.setAttribute('file',fn);
 SimulatedExperiments.setAttribute('modified',datestr(now));
 SimulatedExperiments.setAttribute('created',datestr(now));
@@ -50,10 +126,10 @@ FSim.setAttribute('focalPlaneIndex','0');
 FSim.setAttribute('focalPlaneSpacing','200.000000');
 FSim.setAttribute('numberOfFocalPlanes','1');   %%%%%%%  changed for most focused plane
 FSim.setAttribute('useCustomFocalPlanePositions','false');
-FSim.setAttribute('gain','1');
+FSim.setAttribute('gain','0.01961378');
 FSim.setAttribute('offset','0.000000');
 FSim.setAttribute('pixelSize','65.000000');
-FSim.setAttribute('psfName','C:/Users/nanowork/Desktop/Chris/16-Bit Copy of Compiled Expreimental PSF RESCALED.tif'); %%%%% FIX THIS TO TAKE THE RIGHT PSF %%%%
+FSim.setAttribute('psfName','Compiled Expreimental PSF 16bit.tif'); %%%%% FIX THIS TO TAKE THE RIGHT PSF %%%%
 %FSim.setAttribute('psfName','None');
 FSim.setAttribute('imageWidth','200');
 FSim.setAttribute('imageHeight','200');
@@ -170,7 +246,7 @@ lRotVecZ.setAttribute('optimize','false');
 
 lRadius = docNode.createElement('Radius');
 LPlane.appendChild(lRadius);
-lRadius.setAttribute('value',num2str(radius));
+lRadius.setAttribute('value',num2str(kmtRadius1));
 lRadius.setAttribute('optimize','false');
 
 lsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -179,8 +255,8 @@ lsfm.setAttribute('enabled','true');
 %lsfm.setAttribute('channel','all');
 lsfm.setAttribute('channel',DISK_CHANNEL);
 lsfm.setAttribute('density','100.000000');
-lsfm.setAttribute('numberOfFluorophores','0');
-lsfm.setAttribute('samplingMode','fixedDensity');
+lsfm.setAttribute('numberOfFluorophores',num2str(NUM_DISK_FLUOROPHORES));
+lsfm.setAttribute('samplingMode','fixedNumber');
 lsfm.setAttribute('samplePattern','singlePoint');
 lsfm.setAttribute('numberOfRingFluorophores','2');
 lsfm.setAttribute('ringRadius','10.000000');
@@ -237,7 +313,7 @@ rRotVecZ.setAttribute('optimize','false');
 
 rRadius = docNode.createElement('Radius');
 RPlane.appendChild(rRadius);
-rRadius.setAttribute('value',num2str(radius));
+rRadius.setAttribute('value',num2str(kmtRadius1));
 rRadius.setAttribute('optimize','false');
 
 rsfm = docNode.createElement('SurfaceFluorophoreModel');
@@ -246,8 +322,8 @@ rsfm.setAttribute('enabled','true');
 %rsfm.setAttribute('channel','all');
 rsfm.setAttribute('channel',DISK_CHANNEL);
 rsfm.setAttribute('density','100.000000');
-rsfm.setAttribute('numberOfFluorophores','0');
-rsfm.setAttribute('samplingMode','fixedDensity');
+rsfm.setAttribute('numberOfFluorophores',num2str(NUM_DISK_FLUOROPHORES));
+rsfm.setAttribute('samplingMode','fixedNumber');
 rsfm.setAttribute('samplePattern','singlePoint');
 rsfm.setAttribute('numberOfRingFluorophores','2');
 rsfm.setAttribute('ringRadius','10.000000');
@@ -255,111 +331,29 @@ rsfm.setAttribute('randomizePatternOrientations','false');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RPlane
 
-%%%%%%%%%%%%%%%%%%%%% make spheres %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% make points to represent the kMT positions %%%%%%%%%%%%%%%%
+initialize_points(docNode, ModelObjectList, 'lkMT1', lxpos1, lypos1, lzpos1, params);
+initialize_points(docNode, ModelObjectList, 'rkMT1', rxpos1, rypos1, rzpos1, params);
 
-for i = 1:(numel(lkMTpos))
-	lkMT = docNode.createElement('SphereModel');
-	ModelObjectList.appendChild(lkMT);
-	lname = docNode.createElement('Name');
-	lkMT.appendChild(lname);
-	lname.setAttribute('value',['lkMT - ' int2str(i)]);
-	
-	lvis = docNode.createElement('Visible');
-	lkMT.appendChild(lvis);
-	%lvis.setAttribute('value','true');
-	lvis.setAttribute('value',SHOW_SPHERES);
-	
-	lscan = docNode.createElement('Scannable');
-	lkMT.appendChild(lscan);
-	lscan.setAttribute('value','true');
-
-	lposx = docNode.createElement('PositionX');
-	lkMT.appendChild(lposx);
-	lposx.setAttribute('value',num2str(lkMTpos(i)));
-	lposx.setAttribute('optimize','false');
-
-	lposy = docNode.createElement('PositionY');
-	lkMT.appendChild(lposy);
-	lposy.setAttribute('value',num2str(ypos(i)));
-	lposy.setAttribute('optimize','false');
-
-	lposz = docNode.createElement('PositionZ');
-	lkMT.appendChild(lposz);
-	lposz.setAttribute('value',num2str(zpos(i)));
-	lposz.setAttribute('optimize','false');
-
-	lradius = docNode.createElement('Radius');
-	lkMT.appendChild(lradius);
-	lradius.setAttribute('value','10.000000');
-	lradius.setAttribute('optimize','false');
-
-	lsfm = docNode.createElement('SurfaceFluorophoreModel');
-	lkMT.appendChild(lsfm);
-	lsfm.setAttribute('channel',SPHERE_CHANNEL);
-    %lsfm.setAttribute('numberOfFluorophores','1');
-	lsfm.setAttribute('density','900.00');
-
-	lvfm = docNode.createElement('VolumeFluororphoreModel');
-	lkMT.appendChild(lvfm);
-	lvfm.setAttribute('channel',SPHERE_CHANNEL);
-    lvfm.setAttribute('numberOfFluorophores','1');
+if kmtShow2
+    initialize_points(docNode, ModelObjectList, 'lkMT2', lxpos2, lypos2, lzpos2, params);
+    initialize_points(docNode, ModelObjectList, 'rkMT2', rxpos2, rypos2, rzpos2, params);
 end
 
-
-for i = 1:(numel(rkMTpos))
-	rkMT = docNode.createElement('SphereModel');
-	ModelObjectList.appendChild(rkMT);
-	rname = docNode.createElement('Name');
-	rkMT.appendChild(rname);
-	rname.setAttribute('value',['rkMT - ' int2str(i)]);
-	
-	rvis = docNode.createElement('Visible');
-	rkMT.appendChild(rvis);
-	%rvis.setAttribute('value','true');
-	rvis.setAttribute('value',SHOW_SPHERES);
-	
-	rscan = docNode.createElement('Scannable');
-	rkMT.appendChild(rscan);
-	rscan.setAttribute('value','true');
-
-	rposx = docNode.createElement('PositionX');
-	rkMT.appendChild(rposx);
-	rposx.setAttribute('value',num2str(rkMTpos(i)));
-	rposx.setAttribute('optimize','false');
-
-	rposy = docNode.createElement('PositionY');
-	rkMT.appendChild(rposy);
-	rposy.setAttribute('value',num2str(ypos(i)));
-	rposy.setAttribute('optimize','false');
-
-	rposz = docNode.createElement('PositionZ');
-	rkMT.appendChild(rposz);
-	rposz.setAttribute('value',num2str(zpos(i)));
-	rposz.setAttribute('optimize','false');
-
-	rradius = docNode.createElement('Radius');
-	rkMT.appendChild(rradius);
-	rradius.setAttribute('value','10.000000');
-	rradius.setAttribute('optimize','false');
-
-	rsfm = docNode.createElement('SurfaceFluorophoreModel');
-	rkMT.appendChild(rsfm);
-	rsfm.setAttribute('channel',SPHERE_CHANNEL);
-   % rsfm.setAttribute('numberOfFluorophores','1');
-	rsfm.setAttribute('density','900.00');
-
-	rvfm = docNode.createElement('VolumeFluorophoreModel');
-	rkMT.appendChild(rvfm);
-	rvfm.setAttribute('channel',SPHERE_CHANNEL);
-    rvfm.setAttribute('numberOfFluorophores','1');
+if kmtShow3
+    initialize_points(docNode, ModelObjectList, 'lkMT3', lxpos3, lypos3, lzpos3, params);
+    initialize_points(docNode, ModelObjectList, 'rkMT3', rxpos3, rypos3, rzpos3, params);
 end
 
-%%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%% make the tubules %%%%%%%%%%%%%%%%%%%%%%%%%%
+% These aren't currently needed and serve only to slow down  %
+% loading of the files.                                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for i = 1:(numel(rkMTpos))
+for i = 1:(numel(rxpos1))
 	rtube = docNode.createElement('CylinderModel');
 	ModelObjectList.appendChild(rtube);
-	
+
 	rtubeName = docNode.createElement('Name');
 	rtube.appendChild(rtubeName);
 	rtubeName.setAttribute('value',['RTubule - ' num2str(i)]);
@@ -372,17 +366,20 @@ for i = 1:(numel(rkMTpos))
 	rtubePosX = docNode.createElement('PositionX');
 	rtube.appendChild(rtubePosX);
 	%rtubePosX.setAttribute('value',num2str(xplanes(2)));
-	rtubePosX.setAttribute('value',num2str( xplanes(2) - (rightTubelengths(i)/2) ));
+	x = xplanes(2) - (rightTubelengths(i)/2);
+	rtubePosX.setAttribute('value', num2str(x) );
 	rtubePosX.setAttribute('optimize','false');
-	
+
 	rtubePosY = docNode.createElement('PositionY');
 	rtube.appendChild(rtubePosY);
-	rtubePosY.setAttribute('value',num2str(ypos(i)));
+	y = rypos1(i);
+	rtubePosY.setAttribute('value',num2str(y));
 	rtubePosY.setAttribute('optimize','false');
 
 	rtubePosZ = docNode.createElement('PositionZ');
 	rtube.appendChild(rtubePosZ);
-	rtubePosZ.setAttribute('value',num2str(zpos(i)));
+	z = rzpos1(i);
+	rtubePosZ.setAttribute('value',num2str(z));
 	rtubePosZ.setAttribute('optimize','false');
 
 	rtubeRotAngle = docNode.createElement('RotationAngle');
@@ -414,8 +411,8 @@ for i = 1:(numel(rkMTpos))
 	rtube.appendChild(rtubeLength);
 	rtubeLength.setAttribute('value',num2str( rightTubelengths(i) ));
 	rtubeLength.setAttribute('optimize','false');
-	
-	
+
+
 	rtubeSFM = docNode.createElement('SurfaceFluorophoreModel');
 	rtube.appendChild(rtubeSFM);
 	rtubeSFM.setAttribute('enabled','true');
@@ -429,7 +426,7 @@ for i = 1:(numel(rkMTpos))
 	rtubeSFM.setAttribute('ringRadius','10.000000');
 	rtubeSFM.setAttribute('randomizePatternOrientations','false');
 
-	rtubeVFM = docNode.createElement('VolumeFluorophoreMode');
+	rtubeVFM = docNode.createElement('VolumeFluorophoreModel');
 	rtube.appendChild(rtubeVFM);
 	rtubeVFM.setAttribute('enabled','true');
 	%rtubeVFM.setAttribute('channel','all');
@@ -442,14 +439,19 @@ for i = 1:(numel(rkMTpos))
 	rtubeVFM.setAttribute('ringRadius','10.000000');
 	rtubeVFM.setAttribute('randomizePatternOrientations','false');
 
-	
+    rtubeGFM = docNode.createElement('GridFluorophoreModel');
+    rtube.appendChild(rtubeGFM);
+    rtubeGFM.setAttribute('enabled','false');
+    rtubeGFM.setAttribute('channel','all');
+	rtubeGFM.setAttribute('intensity','1.0');
+    rtubeGFM.setAttribute('spacing','50.0');
 end
 
 
-for i = 1:(numel(lkMTpos))
+for i = 1:(numel(lxpos1))
 	ltube = docNode.createElement('CylinderModel');
 	ModelObjectList.appendChild(ltube);
-	
+
 	ltubeName = docNode.createElement('Name');
 	ltube.appendChild(ltubeName);
 	ltubeName.setAttribute('value',['LTubule - ' num2str(i)]);
@@ -462,17 +464,20 @@ for i = 1:(numel(lkMTpos))
 	ltubePosX = docNode.createElement('PositionX');
 	ltube.appendChild(ltubePosX);
 	%ltubePosX.setAttribute('value',num2str(xplanes(1)));
-	ltubePosX.setAttribute('value',num2str( xplanes(1) + (leftTubelengths(i)/2) ));
+	x = xplanes(1) + (leftTubelengths(i)/2);
+	ltubePosX.setAttribute('value',num2str(x));
 	ltubePosX.setAttribute('optimize','false');
-	
+
 	ltubePosY = docNode.createElement('PositionY');
 	ltube.appendChild(ltubePosY);
-	ltubePosY.setAttribute('value',num2str(ypos(i)));
+	y = lypos1(i);
+	ltubePosY.setAttribute('value',num2str(y));
 	ltubePosY.setAttribute('optimize','false');
 
 	ltubePosZ = docNode.createElement('PositionZ');
 	ltube.appendChild(ltubePosZ);
-	ltubePosZ.setAttribute('value',num2str(zpos(i)));
+	z = lzpos1(i);
+	ltubePosZ.setAttribute('value',num2str(z));
 	ltubePosZ.setAttribute('optimize','false');
 
 	ltubeRotAngle = docNode.createElement('RotationAngle');
@@ -499,11 +504,11 @@ for i = 1:(numel(lkMTpos))
 	ltube.appendChild(ltubeRadius);
 	ltubeRadius.setAttribute('value','5.000000');
 	ltubeRadius.setAttribute('optimize','false');
-	
+
 	ltubeLength = docNode.createElement('Length');
 	ltube.appendChild(ltubeLength);
 	ltubeLength.setAttribute('value',num2str( leftTubelengths(i) ));
-	ltubeLength.setAttribute('optimize','false'); 
+	ltubeLength.setAttribute('optimize','false');
 
 	ltubeSFM = docNode.createElement('SurfaceFluorophoreModel');
 	ltube.appendChild(ltubeSFM);
@@ -518,7 +523,7 @@ for i = 1:(numel(lkMTpos))
 	ltubeSFM.setAttribute('ringRadius','10.000000');
 	ltubeSFM.setAttribute('randomizePatternOrientations','false');
 
-	ltubeVFM = docNode.createElement('VolumeFluorophoreMode');
+	ltubeVFM = docNode.createElement('VolumeFluorophoreModel');
 	ltube.appendChild(ltubeVFM);
 	ltubeVFM.setAttribute('enabled','true');
 	%ltubeVFM.setAttribute('channel','all');
@@ -531,15 +536,13 @@ for i = 1:(numel(lkMTpos))
 	ltubeVFM.setAttribute('ringRadius','10.000000');
 	ltubeVFM.setAttribute('randomizePatternOrientations','false');
 
-	
+	ltubeGFM = docNode.createElement('GridFluorophoreModel');
+    ltube.appendChild(ltubeGFM);
+    ltubeGFM.setAttribute('enabled','false');
+    ltubeGFM.setAttribute('channel','all');
+	ltubeGFM.setAttribute('intensity','1.0');
+    ltubeGFM.setAttribute('spacing','50.0');
 end
-	
-
-	
-	
-
-
-
 
 
 xmlwrite(filename,docNode);
